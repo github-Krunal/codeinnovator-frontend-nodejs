@@ -4,6 +4,7 @@ import mongoose from 'mongoose';
 import { Project } from './src/model/project.model';
 import projectSchemaModel from './src/schema/project.schema';
 import { ObjectId } from 'mongodb';
+import appsSchemaModel from './src/schema/apps.schema';
 
 
 var cors = require('cors')
@@ -35,6 +36,11 @@ app.delete('/api/projectdelete/:id', async(req: Request, res: Response) => {
   const id = req.params.id;
    let result= await projectSchemaModel.collection.deleteOne({ _id: new ObjectId(id) })
   res.json(result);
+});
+
+app.get('/api/getApps', async(req: Request, res: Response) => {
+ let result= await appsSchemaModel.collection.find().toArray()
+res.send(result);
 });
 
 app.listen(port, () => {
