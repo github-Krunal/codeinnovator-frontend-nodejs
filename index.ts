@@ -5,6 +5,8 @@ import { Project } from './src/model/project.model';
 import projectSchemaModel from './src/schema/project.schema';
 import { ObjectId } from 'mongodb';
 import appsSchemaModel from './src/schema/apps.schema';
+import taskSchemaModel from './src/schema/task.schema';
+import { Task } from './src/model/task.model';
 
 
 var cors = require('cors')
@@ -40,6 +42,12 @@ app.delete('/api/projectdelete/:id', async(req: Request, res: Response) => {
 
 app.get('/api/getApps', async(req: Request, res: Response) => {
  let result= await appsSchemaModel.collection.find().toArray()
+res.send(result);
+});
+
+app.post('/api/addTask', async(req: Request, res: Response) => {
+  const task:Task = req.body;
+ let result= await taskSchemaModel.collection.insertOne(task);
 res.send(result);
 });
 
