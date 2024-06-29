@@ -7,6 +7,8 @@ import { ObjectId } from 'mongodb';
 import appsSchemaModel from './src/schema/apps.schema';
 import taskSchemaModel from './src/schema/task.schema';
 import { Task } from './src/model/task.model';
+import { Attendence } from './src/model/attendence.model';
+import attendenceSchemaModel from './src/schema/attendence.schema';
 
 
 var cors = require('cors')
@@ -50,7 +52,26 @@ app.post('/api/addTask', async(req: Request, res: Response) => {
  let result= await taskSchemaModel.collection.insertOne(task);
 res.send(result);
 });
-
+app.post('/api/addAttendence', async(req: Request, res: Response) => {
+  const attendence:Attendence = req.body;
+ let result= await attendenceSchemaModel.collection.insertOne(attendence);
+res.send(result);
+});
+app.get('/api/getAttendence', async(req: Request, res: Response) => {
+ let result= await attendenceSchemaModel.collection.find().toArray()
+res.send(result);
+});
+app.post('/api/updateAttendence/:id', async(req: Request, res: Response) => {
+  const attendenceID = req.params.id;
+  const attendence:Attendence = req.body;
+  const objectId = new ObjectId(attendenceID);
+  const filter = { _id: objectId };
+  const update = {
+    $set: {...attendence }, // Adjust the update operation based on your needs
+  };
+  let result= await attendenceSchemaModel.collection.findOneAndUpdate(filter, update)
+ res.send(result);
+ });
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
