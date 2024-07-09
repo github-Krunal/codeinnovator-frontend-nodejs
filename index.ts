@@ -9,6 +9,9 @@ import taskSchemaModel from './src/schema/task.schema';
 import { Task } from './src/model/task.model';
 import { Attendence } from './src/model/attendence.model';
 import attendenceSchemaModel from './src/schema/attendence.schema';
+import { APIConstant } from './src/constant/apicontant';
+import { Planner } from './src/model/planner.model';
+import plannerSchemaModel from './src/schema/planner.schema';
 
 
 var cors = require('cors')
@@ -72,6 +75,32 @@ app.post('/api/updateAttendence/:id', async(req: Request, res: Response) => {
   let result= await attendenceSchemaModel.collection.findOneAndUpdate(filter, update)
  res.send(result);
  });
+
+
+
+// planner create
+ app.post(APIConstant.CREATE_PLANNER, async(req: Request, res: Response) => {
+  const plan:Planner = req.body;
+ let result= await plannerSchemaModel.collection.insertOne(plan);
+res.send(result);
+});
+// get plans
+app.get(APIConstant.GET_PLANNER, async(req: Request, res: Response) => {
+  let result= await plannerSchemaModel.collection.find().toArray()
+ res.send(result);
+ });
+
+
+
+
+
+
+
+
+
+
+
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
