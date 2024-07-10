@@ -12,6 +12,8 @@ import attendenceSchemaModel from './src/schema/attendence.schema';
 import { APIConstant } from './src/constant/apicontant';
 import { Planner } from './src/model/planner.model';
 import plannerSchemaModel from './src/schema/planner.schema';
+import containerSchemaModel from './src/schema/container.schema';
+import { Container } from './src/model/container.model';
 
 
 var cors = require('cors')
@@ -50,11 +52,6 @@ app.get('/api/getApps', async(req: Request, res: Response) => {
 res.send(result);
 });
 
-app.post('/api/addTask', async(req: Request, res: Response) => {
-  const task:Task = req.body;
- let result= await taskSchemaModel.collection.insertOne(task);
-res.send(result);
-});
 app.post('/api/addAttendence', async(req: Request, res: Response) => {
   const attendence:Attendence = req.body;
  let result= await attendenceSchemaModel.collection.insertOne(attendence);
@@ -98,16 +95,33 @@ app.get(APIConstant.GET_SINGLE_PLAN+"/:id", async(req: Request, res: Response) =
  });
 
 
+// container create
+app.post(APIConstant.CREATE_CONTAINER, async(req: Request, res: Response) => {
+  const container:Container = req.body;
+ let result= await containerSchemaModel.collection.insertOne(container);
+res.send(result);
+});
 
+ // get plan Container
+ app.get(APIConstant.GET_PLAN_CONTAINER+"/:planID", async(req: Request, res: Response) => {
+  const planID = req.params.planID;
+  let result= await containerSchemaModel.collection.find({ "PlanID":planID}).toArray()
+ res.json(result);
+ });
 
+// add task
+ app.post('/api/addTask', async(req: Request, res: Response) => {
+  const task:Task = req.body;
+ let result= await taskSchemaModel.collection.insertOne(task);
+res.send(result);
+});
 
-
-
-
-
-
-
-
+// get task
+app.get(APIConstant.GET_TASK_CONTAINER+"/:planID", async(req: Request, res: Response) => {
+  const planID = req.params.planID;
+  let result= await taskSchemaModel.collection.find({ "PlanID":planID}).toArray()
+  res.send(result);
+});
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

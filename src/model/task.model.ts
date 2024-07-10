@@ -1,4 +1,5 @@
 export class Task{
-    public Title?:string;
-    public Description?:string
+    public TaskName?:string;
+    public PlanID?:string
+    public ContainerID?:string
 }
