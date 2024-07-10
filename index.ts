@@ -90,6 +90,13 @@ app.get(APIConstant.GET_PLANNER, async(req: Request, res: Response) => {
  res.send(result);
  });
 
+ // get single plan
+app.get(APIConstant.GET_SINGLE_PLAN+"/:id", async(req: Request, res: Response) => {
+  const id = req.params.id;
+  let result= await plannerSchemaModel.collection.find({ "_id": new ObjectId(id) }).toArray()
+ res.json(result);
+ });
+
 
 
 
