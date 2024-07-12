@@ -109,6 +109,13 @@ res.send(result);
  res.json(result);
  });
 
+//  delete container
+ app.delete(APIConstant.DELETE_CONTAINER+'/:id', async(req: Request, res: Response) => {
+  const id = req.params.id;
+   let result= await containerSchemaModel.collection.deleteOne({ _id: new ObjectId(id) })
+  res.json(result);
+});
+
 // add task
  app.post('/api/addTask', async(req: Request, res: Response) => {
   const task:Task = req.body;
