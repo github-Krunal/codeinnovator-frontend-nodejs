@@ -14,6 +14,8 @@ import { Planner } from './src/model/planner.model';
 import plannerSchemaModel from './src/schema/planner.schema';
 import containerSchemaModel from './src/schema/container.schema';
 import { Container } from './src/model/container.model';
+import { RepositoryModel } from './src/model/repository.model';
+import repositorySchemaModel from './src/schema/repository.schma';
 
 
 var cors = require('cors')
@@ -129,6 +131,33 @@ app.get(APIConstant.GET_TASK_CONTAINER+"/:planID", async(req: Request, res: Resp
   let result= await taskSchemaModel.collection.find({ "PlanID":planID}).toArray()
   res.send(result);
 });
+
+
+// add repository
+app.post(APIConstant.ADD_REPOSITORY, async(req: Request, res: Response) => {
+  const repository:RepositoryModel = req.body;
+  createDynamicCollection(repository.Name);
+ let result= await repositorySchemaModel.collection.insertOne(repository);
+res.send(result);
+});
+// GET repository
+app.get(APIConstant.GET_REPOSITORY, async(req: Request, res: Response) => {
+ let result= await repositorySchemaModel.collection.find().toArray();
+res.send(result);
+});
+
+async function createDynamicCollection(collectionName:any) {
+  try {
+    // Define a schema (can be empty or you can define it according to your needs)
+    const dynamicSchema = new mongoose.Schema({}, { strict: false });
+    // Create a model with the dynamic collection name
+    const DynamicModel = mongoose.model(collectionName, dynamicSchema, collectionName);
+    // Close the connection
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
