@@ -16,6 +16,7 @@ import containerSchemaModel from './src/schema/container.schema';
 import { Container } from './src/model/container.model';
 import { RepositoryModel } from './src/model/repository.model';
 import repositorySchemaModel from './src/schema/repository.schma';
+import { DeleteModel } from './src/model/delete.model';
 
 
 var cors = require('cors')
@@ -145,6 +146,27 @@ app.get(APIConstant.GET_REPOSITORY, async(req: Request, res: Response) => {
  let result= await repositorySchemaModel.collection.find().toArray();
 res.send(result);
 });
+
+app.post(APIConstant.DELETE_RECORD, async(req: Request, res: Response) => {
+  
+  const deleteModel:DeleteModel = req.body;
+  const dynamicSchema = new mongoose.Schema({}, { strict: false });
+  if(deleteModel.RepositoryName){
+    let query={
+      _id: new ObjectId(deleteModel._id) 
+    }
+    const db = mongoose.connection.db;
+    const collection = db.collection(deleteModel.RepositoryName);
+    const deleteResult = await collection.deleteMany(query);
+    // const DynamicModel = mongoose.model(deleteModel.RepositoryName, dynamicSchema, deleteModel.RepositoryName);
+    
+    // console.log(query)
+    // const result = await DynamicModel.deleteOne(query);
+    res.send(deleteResult);
+  }
+    // Delete the data from the collection
+ });
+
 
 async function createDynamicCollection(collectionName:any) {
   try {
